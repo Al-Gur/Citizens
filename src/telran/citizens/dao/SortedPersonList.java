@@ -38,7 +38,7 @@ public class SortedPersonList extends ArrayList<Person> {
                 right = middle;
             }
         }
-        return comparator.compare(person, get(left)) == 0 ? left : -left - 1;
+        return get(left).equals(person) ? left : -left - 1;
     }
 
     // if the list is sorted first not by id,

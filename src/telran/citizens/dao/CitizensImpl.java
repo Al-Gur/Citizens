@@ -49,6 +49,14 @@ public class CitizensImpl implements Citizens {
         return ((SortedPersonList) idList).binarySearch(new Person(id, "", "", null));
     }
 
+    private int absIndex(int index) {
+        return index >= 0 ? index : -index - 1;
+    }
+
+    private int absIndexAfter(int index) {
+        return index >= 0 ? index + 1 : -index - 1;
+    }
+
     @Override
     public boolean remove(int id) {
         int index = findId(id);
@@ -70,19 +78,19 @@ public class CitizensImpl implements Citizens {
     @Override
     public Iterable<Person> find(int minAge, int maxAge) {
         Person person1 = new Person(Integer.MIN_VALUE, "", "", LocalDate.now().minusYears(minAge));
-        int index1 = -((SortedPersonList) ageList).binarySearch(person1) - 1;
-        Person person2 = new Person(Integer.MIN_VALUE, "", "", LocalDate.now().minusYears(maxAge + 1));
-        int index2 = -((SortedPersonList) ageList).binarySearch(person2) - 1;
-        return ageList.subList(index1, index2);
+        int index1 = ((SortedPersonList) ageList).binarySearch(person1);
+        Person person2 = new Person(Integer.MAX_VALUE, "", "", LocalDate.now().minusYears(maxAge));
+        int index2 = ((SortedPersonList) ageList).binarySearch(person2);
+        return ageList.subList(absIndex(index1), absIndexAfter(index2));
     }
 
     @Override
     public Iterable<Person> find(String lastName) {
         Person person1 = new Person(Integer.MIN_VALUE, "", lastName, null);
-        int index1 = -((SortedPersonList) lastnameList).binarySearch(person1) - 1;
+        int index1 = ((SortedPersonList) lastnameList).binarySearch(person1);
         Person person2 = new Person(Integer.MAX_VALUE, "", lastName, null);
-        int index2 = -((SortedPersonList) lastnameList).binarySearch(person2) - 1;
-        return lastnameList.subList(index1, index2);
+        int index2 = ((SortedPersonList) lastnameList).binarySearch(person2);
+        return lastnameList.subList(absIndex(index1), absIndexAfter(index2));
     }
 
     @Override
