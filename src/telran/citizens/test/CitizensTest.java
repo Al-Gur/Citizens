@@ -7,20 +7,25 @@ import telran.citizens.dao.CitizensImpl;
 import telran.citizens.model.Person;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CitizensTest {
     private Citizens citizens;
     private static final LocalDate now = LocalDate.now();
+    private static final List<Person> list0 = Arrays.asList(
+            new Person(1, "Peter", "Jackson", now.minusYears(23)),
+            new Person(2, "John", "Smith", now.minusYears(20)),
+            new Person(3, "Mary", "Jackson", now.minusYears(20)),
+            new Person(4, "Rabindranate", "Anand", now.minusYears(25)));
 
     @BeforeEach
     void setUp() {
-        citizens = new CitizensImpl();
-        citizens.add(new Person(1, "Peter", "Jackson", now.minusYears(23)));
-        citizens.add(new Person(2, "John", "Smith", now.minusYears(20)));
-        citizens.add(new Person(3, "Mary", "Jackson", now.minusYears(20)));
-        citizens.add(new Person(4, "Rabindranate", "Anand", now.minusYears(25)));
+        citizens = new CitizensImpl(list0);
     }
 
     @Test
@@ -53,46 +58,61 @@ class CitizensTest {
     @Test
     void testFindByAges() {
         Iterable<Person> res = citizens.find(20, 23);
-        System.out.println("============= Age test =============");
-        for (Person person : res) {
-            System.out.println(person);
-        }
+        List<Person> list = new ArrayList<Person>(list0);
+        list.sort((o1,o2)-> Integer.compare(o1.getAge(), o2.getAge()));
+        assertIterableEquals(res, list.subList(0,3));
+        //Iterable<Person> res0 = list0.subList(0,2);
+        //assertIterableEquals(res0, res); // failed if the order differs
+//        System.out.println("============= Age test =============");
+//        res.forEach(person -> System.out.println(person));
     }
 
     @Test
     void testFindByLastName() {
         Iterable<Person> res = citizens.find("Jackson");
-        System.out.println("============= Name test =============");
-        for (Person person : res) {
-            System.out.println(person);
-        }
+        List<Person> list = new ArrayList<Person>(list0);
+        list.sort((o1,o2)-> o1.getLastName().compareTo(o2.getLastName()));
+        assertIterableEquals(res, list.subList(1,3));
+//        System.out.println("============= Name test =============");
+//        for (Person person : res) {
+//            System.out.println(person);
+//        }
     }
 
     @Test
     void testGetAllPersonSortedById() {
         Iterable<Person> res = citizens.getAllPersonSortedById();
-        System.out.println("============= Sorted by id =============");
-        for (Person person : res) {
-            System.out.println(person);
-        }
+        List<Person> list = new ArrayList<Person>(list0);
+        list.sort((o1,o2)-> o1.compareTo(o2));
+        assertIterableEquals(res, list);
+//        System.out.println("============= Sorted by id =============");
+//        for (Person person : res) {
+//            System.out.println(person);
+//        }
     }
 
     @Test
     void testGetAllPersonSortedByLastName() {
         Iterable<Person> res = citizens.getAllPersonSortedByLastName();
-        System.out.println("============= Sorted by LastName =============");
-        for (Person person : res) {
-            System.out.println(person);
-        }
+        List<Person> list = new ArrayList<Person>(list0);
+        list.sort((o1,o2)-> o1.getLastName().compareTo(o2.getLastName()));
+        assertIterableEquals(res, list);
+//        System.out.println("============= Sorted by LastName =============");
+//        for (Person person : res) {
+//            System.out.println(person);
+//        }
     }
 
     @Test
     void testGetAllPersonSortedByAge() {
         Iterable<Person> res = citizens.getAllPersonSortedByAge();
-        System.out.println("============= Sorted by age =============");
-        for (Person person : res) {
-            System.out.println(person);
-        }
+        List<Person> list = new ArrayList<Person>(list0);
+        list.sort((o1,o2)-> Integer.compare(o1.getAge(), o2.getAge()));
+        assertIterableEquals(res, list);
+//        System.out.println("============= Sorted by age =============");
+//        for (Person person : res) {
+//            System.out.println(person);
+//        }
     }
 
     @Test
