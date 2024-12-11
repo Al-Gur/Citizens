@@ -29,6 +29,22 @@ class CitizensTest {
     }
 
     @Test
+    void testConstructor() {
+        List<Person> list1 = Arrays.asList(
+                new Person(3, "Peter", "Jackson", now.minusYears(23)),
+                new Person(2, "John", "Smith", now.minusYears(20)),
+                new Person(3, "Mary", "Jackson", now.minusYears(20)),
+                new Person(4, "Rabindranate", "Anand", now.minusYears(25)));
+        citizens = new CitizensImpl(list1);
+        assertEquals(3, citizens.size());
+        List<Person> listRes = Arrays.asList(
+                new Person(2, "John", "Smith", now.minusYears(20)),
+                new Person(3, "Peter", "Jackson", now.minusYears(23)),
+                new Person(4, "Rabindranate", "Anand", now.minusYears(25)));
+        assertIterableEquals(citizens.getAllPersonSortedById(), listRes);
+    }
+
+    @Test
     void testAdd() {
         assertFalse(citizens.add(null));
         assertFalse(citizens.add(new Person(2, "John", "Smith", now.minusYears(20))));

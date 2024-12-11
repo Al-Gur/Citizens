@@ -33,12 +33,8 @@ public class CitizensImpl implements Citizens {
     }
 
     public CitizensImpl(List<Person> citizens) {
-        idList = new ArrayList<>(citizens);
-        Collections.sort(idList);
-        lastnameList = new ArrayList<>(citizens);
-        Collections.sort(lastnameList, lastNameComparator);
-        ageList = new ArrayList<>(citizens);
-        Collections.sort(ageList, ageComparator);
+        this();
+        citizens.forEach(person -> add(person));
     }
 
     @Override
