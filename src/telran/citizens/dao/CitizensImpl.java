@@ -6,9 +6,9 @@ import java.time.LocalDate;
 import java.util.*;
 
 public class CitizensImpl implements Citizens {
-    private TreeSet<Person> idList;
-    private TreeSet<Person> lastnameList;
-    private TreeSet<Person> ageList;
+    private TreeSet<Person> idSet;
+    private TreeSet<Person> lastnameSet;
+    private TreeSet<Person> ageSet;
 
     private final static Comparator<Person> lastNameComparator =
             addComparator((o1, o2) -> o1.getLastName().compareTo(o2.getLastName()));
@@ -24,9 +24,9 @@ public class CitizensImpl implements Citizens {
     }
 
     public CitizensImpl() {
-        idList = new TreeSet<>();
-        lastnameList = new TreeSet<>(lastNameComparator);
-        ageList = new TreeSet<>(ageComparator);
+        idSet = new TreeSet<>();
+        lastnameSet = new TreeSet<>(lastNameComparator);
+        ageSet = new TreeSet<>(ageComparator);
     }
 
     // O(n*n) -> O(n * log n)
@@ -38,12 +38,12 @@ public class CitizensImpl implements Citizens {
     // O(n) -> O(log n)
     @Override
     public boolean add(Person person) {
-        if (person == null || Objects.equals(idList.floor(person), person)){
+        if (person == null || Objects.equals(idSet.floor(person), person)){
             return false;
         }
-        idList.add(person);
-        lastnameList.add(person);
-        ageList.add(person);
+        idSet.add(person);
+        lastnameSet.add(person);
+        ageSet.add(person);
         return true;
     }
 
@@ -54,9 +54,9 @@ public class CitizensImpl implements Citizens {
         if (person == null) {
             return false;
         }
-        idList.remove(person);
-        lastnameList.remove(person);
-        ageList.remove(person);
+        idSet.remove(person);
+        lastnameSet.remove(person);
+        ageSet.remove(person);
         return true;
     }
 
@@ -64,7 +64,7 @@ public class CitizensImpl implements Citizens {
     @Override
     public Person find(int id) {
         Person p = new Person(id, "", "", null);
-        Person res = idList.floor(p);
+        Person res = idSet.floor(p);
         return Objects.equals(res, p)? res : null;
     }
 
@@ -73,7 +73,7 @@ public class CitizensImpl implements Citizens {
     public Iterable<Person> find(int minAge, int maxAge) {
         Person person1 = new Person(Integer.MIN_VALUE, "", "", LocalDate.now().minusYears(minAge));
         Person person2 = new Person(Integer.MAX_VALUE, "", "", LocalDate.now().minusYears(maxAge));
-        return ageList.subSet(person1, true, person2, true);
+        return ageSet.subSet(person1, true, person2, true);
     }
 
     // O(log n)
@@ -81,30 +81,30 @@ public class CitizensImpl implements Citizens {
     public Iterable<Person> find(String lastName) {
         Person person1 = new Person(Integer.MIN_VALUE, "", lastName, null);
         Person person2 = new Person(Integer.MAX_VALUE, "", lastName, null);
-        return lastnameList.subSet(person1, true, person2, true);
+        return lastnameSet.subSet(person1, true, person2, true);
     }
 
     // O(1)
     @Override
     public Iterable<Person> getAllPersonSortedById() {
-        return idList;
+        return idSet;
     }
 
     // O(1)
     @Override
     public Iterable<Person> getAllPersonSortedByLastName() {
-        return lastnameList;
+        return lastnameSet;
     }
 
     // O(1)
     @Override
     public Iterable<Person> getAllPersonSortedByAge() {
-        return ageList;
+        return ageSet;
     }
 
     // O(1)
     @Override
     public int size() {
-        return idList.size();
+        return idSet.size();
     }
 }
